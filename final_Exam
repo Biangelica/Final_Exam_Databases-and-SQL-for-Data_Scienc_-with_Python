@@ -1,0 +1,37 @@
+import pandas as pd
+import pandasql as ps
+
+crimes = pd.read_csv('https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/FinalModule_Coursera_V5/data/ChicagoCrimeData.csv')
+
+socioeconomic = pd.read_csv('https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/FinalModule_Coursera_V5/data/ChicagoCensusData.csv')
+
+school = pd.read_csv('https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/FinalModule_Coursera_V5/data/ChicagoPublicSchools.csv')
+
+#find the total numbe of crimes recorded in the CRIME table
+df1 = ps.sqldf('select count(ID) as total from crimes ', locals())
+print(df1)
+
+# List Community areas with per capita income less than 11000
+df2 = ps.sqldf('select COMMUNITY_AREA_NAME from socioeconomic where PER_CAPITA_INCOME < 11000 ', locals())
+print(df2)
+
+df3 = ps.sqldf('select CASE_NUMBER from crimes where DESCRIPTION LIKE "%minor%"', locals())
+print(df3)
+
+df5 = ps.sqldf('select DISTINCT(PRIMARY_TYPE) from crimes where LOCATION_DESCRIPTION LIKE "%SCHOOL%"', locals())
+print(df5)
+
+df6 = ps.sqldf('select AVG(SAFETY_SCORE) from school ', locals())
+print(df6)
+
+df7 = ps.sqldf('select COMMUNITY_AREA_NAME from socioeconomic ORDER BY percent_households_below_poverty DESC LIMIT 5 ', locals())
+print(df7)
+
+df8 = ps.sqldf('select DISTINCT(COMMUNITY_AREA_NUMBER), COUNT(PRIMARY_TYPE)  from crimes  ', locals())
+print(df8)
+
+df9 = ps.sqldf('select COMMUNITY_AREA_NAME from socioeconomic where COMMUNITY_AREA_NUMBER = (select COMMUNITY_AREA_NUMBER from crimes where COMMUNITY_AREA_NUMBER = 58)  ', locals())
+print(df9)
+
+df10 = ps.sqldf('select COMMUNITY_AREA_NAME from socioeconomic where COMMUNITY_AREA_NUMBER = (select COMMUNITY_AREA_NUMBER from crimes where COMMUNITY_AREA_NUMBER = 58)  ', locals())
+print(df10)
